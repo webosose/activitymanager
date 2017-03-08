@@ -2273,6 +2273,9 @@ MojErr ActivityCategoryHandler::getManagerInfo(MojServiceMessage *msg, MojObject
     err = reply.putBool(MojServiceMessage::ReturnValueKey, true);
     MojErrCheck(err);
 
+    err = reply.putBool(MojServiceMessage::ReturnValueKey, true);
+    MojErrCheck(err);
+
     err = msg->reply(reply);
     MojErrCheck(err);
 
