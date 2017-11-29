@@ -136,10 +136,13 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
     }
 
     MojObject subscribed;
+    bool statusChanged = false;
     bool valueChanged = false;
 
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
 
+    if (m_response != response)
+        valueChanged = true;
     m_subscriptionCount++;
     m_response = response;
 
@@ -170,7 +173,7 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
                      m_subscription->getURL().getString().c_str());
         if (!m_isSatisfied) {
             m_isSatisfied = true;
-            valueChanged = true;
+            statusChanged = true;
         }
     } else {
         LOG_AM_DEBUG("[Activity %llu] Trigger call \"%s\" is not triggered",
@@ -178,11 +181,11 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
                      m_subscription->getURL().getString().c_str());
         if (m_isSatisfied) {
             m_isSatisfied = false;
-            valueChanged = true;
+            statusChanged = true;
         }
     }
 
-    m_activity.lock()->onSuccessTrigger(shared_from_this(), valueChanged);
+    m_activity.lock()->onSuccessTrigger(shared_from_this(), statusChanged, valueChanged);
 }
 
 MojErr ConcreteTrigger::toJson(MojObject& rep, unsigned flags) const

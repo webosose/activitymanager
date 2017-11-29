@@ -86,7 +86,7 @@ public:
     void clearTrigger();
     bool hasTrigger() const;
     void onFailTrigger(std::shared_ptr<ITrigger> trigger);
-    virtual void onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool valueChanged);
+    virtual void onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool statusChanged, bool valueChanged);
 
     bool isTriggered() const;
     TriggerConditionType getTriggerMode();

@@ -24,7 +24,7 @@ public:
     ContinuousActivity(activityId_t id);
     virtual ~ContinuousActivity();
 
-    virtual void onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool valueChanged);
+    virtual void onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool statusChanged, bool valueChanged);
     virtual void onMetRequirement(std::string name);
     virtual void scheduled();
 

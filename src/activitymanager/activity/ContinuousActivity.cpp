@@ -45,8 +45,12 @@ bool ContinuousActivity::isShouldWait() const
     }
 }
 
-void ContinuousActivity::onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool valueChanged)
+void ContinuousActivity::onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool statusChanged, bool valueChanged)
 {
+    if (!valueChanged) {
+        return;
+    }
+
     LOG_AM_DEBUG("[ContinuousActivity %llu] Trigger \"%s\" %s", m_id, trigger->getName().c_str(),
                  trigger->isSatisfied() ? "Satisfiy" : "Unsatisfy");
 
@@ -56,7 +60,7 @@ void ContinuousActivity::onSuccessTrigger(std::shared_ptr<ITrigger> trigger, boo
         m_shouldWait = true;
     }
 
-    if (valueChanged || Activity::isRunnable()) {
+    if (statusChanged || Activity::isRunnable()) {
         m_state->onTriggerUpdate(shared_from_this(), trigger);
     }
 }

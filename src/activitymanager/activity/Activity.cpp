@@ -349,14 +349,14 @@ void Activity::onFailTrigger(std::shared_ptr<ITrigger> trigger)
     m_state->onTriggerFail(shared_from_this(), trigger);
 }
 
-void Activity::onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool valueChanged)
+void Activity::onSuccessTrigger(std::shared_ptr<ITrigger> trigger, bool statusChanged, bool valueChanged)
 {
     LOG_AM_DEBUG("[Activity %llu] Trigger \"%s\" %s", m_id, trigger->getName().c_str(),
                  trigger->isSatisfied() ? "Satisfiy" : "Unsatisfy");
 
     respondForStart();
 
-    if (valueChanged) {
+    if (statusChanged) {
         m_state->onTriggerUpdate(shared_from_this(), trigger);
     }
 }
