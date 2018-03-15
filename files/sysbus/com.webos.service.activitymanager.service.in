@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=com.webos.service.activitymanager
+Exec=@WEBOS_INSTALL_SBINDIR@/activitymanager
+Type=static

@@ -1,0 +1,40 @@
+{
+    "common": {
+        "failed-limit": {
+            "count": 5
+        },
+        "restart-limit": {
+            "count": 5,
+            "interval-ms": 100
+        },
+        "validate-caller": true
+    },
+    "requirements": [
+        {
+            "name": "bootup",
+            "method": "luna://com.webos.bootManager/getBootStatus",
+            "params": {"subscribe": true},
+            "where": {"prop": ["signals", "boot-done"], "op": "=", "val": true},
+            "type-schema": {"type": "boolean"}
+        },
+        {
+            "name": "internet",
+            "method": "luna://com.webos.service.connectionmanager/getstatus",
+            "params": {"subscribe": true},
+            "where": {"prop": "isInternetConnectionAvailable", "op": "=", "val": true},
+            "type-schema": {"type": "boolean"}
+        },
+        {
+            "name": "wifi",
+            "method": "luna://com.webos.service.connectionmanager/getstatus",
+            "params": {"subscribe": true},
+            "where": {
+                "and": [
+                    {"prop": ["wifi", "state"], "op": "=", "val": "connected"},
+                    {"prop": ["wifi", "onInternet"], "op": "=", "val": "yes"}
+                ]
+            },
+            "type-schema": {"type": "boolean"}
+        }
+    ]
+}

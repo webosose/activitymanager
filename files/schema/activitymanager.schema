@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "activitymanager",
+    "type": "object",
+    "properties": {
+        "restart-limit": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "interval-ms": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "count",
+                "interval-ms"
+            ]
+        },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "method": {
+                        "type": "string"
+                    },
+                    "params": {
+                        "type": "object"
+                    },
+                    "where": {
+                        "$ref": "where"
+                    },
+                    "type-schema": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": [
+                                    "boolean"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "method",
+                    "params",
+                    "where",
+                    "type-schema"
+                ]
+            }
+        }
+    }
+}

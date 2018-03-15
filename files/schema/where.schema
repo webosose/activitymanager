@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "prop-op-val": {
+            "type": "object",
+            "properties": {
+                "prop": {
+                    "oneOf": [
+                        {"type": "string"},
+                        {"type": "array", "items": {"type": "string"}}
+                    ]
+                },
+                "op": {
+                    "enum": ["<", "<=", "=", ">=", ">", "!=", "where"]
+                },
+                "val": {
+                    "type": ["boolean", "string"]
+                }
+            },
+            "required": ["prop", "op", "val"]
+        }
+    },
+    "id": "where",
+    "type": "object",
+    "oneOf": [
+        {
+            "$ref": "#/definitions/prop-op-val"
+        },
+        {
+            "properties": {
+                "and": {"type": "array", "items": {"$ref": "#/definitions/prop-op-val"}}
+            },
+            "required": ["and"]
+        },
+        {
+            "properties": {
+                "or": {"type": "array", "items": {"$ref": "#/definitions/prop-op-val"}}
+            },
+            "required": ["or"]
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "exeName": "@WEBOS_INSTALL_SBINDIR@/activitymanager",
+    "type": "privileged",
+    "allowedNames": [
+        "com.webos.service.activitymanager",
+        "com.webos.service.activitymanager.client"
+    ],
+    "permissions": [
+        {
+            "service": "com.webos.service.activitymanager",
+            "outbound": ["*"]
+        },
+        {
+            "service": "com.webos.service.activitymanager.client",
+            "outbound": [
+                "com.webos.bootManager",
+                "com.webos.service.alarm",
+                "com.webos.service.battery",
+                "com.webos.service.bus",
+                "com.webos.service.connectionmanager",
+                "com.webos.service.db",
+                "com.webos.service.sleep",
+                "com.webos.service.systemservice",
+                "com.webos.service.telephony"
+            ]
+        }
+    ]
+}

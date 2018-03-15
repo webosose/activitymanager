@@ -1,0 +1,4 @@
+{
+    "id"    : "com.webos.service.activity:1",
+    "owner" : "com.webos.service.activitymanager"
+}

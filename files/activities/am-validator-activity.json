@@ -1,0 +1,30 @@
+{
+    "activity": {
+        "name": "am-validator-activity",
+        "description": "creation by configurator",
+        "requirements": {
+            "bootup": true
+        },
+        "trigger": {
+            "oneshot": true,
+            "method": "luna://com.webos.service.bus/signal/registerServerStatus",
+            "params": {
+                "serviceName": "com.webos.amvalidator",
+                "subscribe": true
+            },
+            "where": {
+                "prop": "connected",
+                "op": "=",
+                "val": true
+            }
+        },
+        "callback": {
+            "method": "luna://com.webos.amvalidator/callback",
+            "params": {"step": "creation by configurator"}
+        },
+        "type": {
+            "foreground": true
+        }
+    },
+    "start": true
+}
