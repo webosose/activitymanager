@@ -181,7 +181,7 @@ unsigned IntervalSchedule::stringToInterval(const char *intervalStr, bool smart)
     unsigned totalSecs = 0;
     unsigned total = 0;
 
-    static const unsigned allowed[] = { 5, 10, 15, 20, 30, 60, 180, 360, 720 };
+    static const unsigned allowed[] = { 1, 5, 10, 15, 20, 30, 60, 180, 360, 720 };
     static const int num_allowed = (sizeof(allowed) / sizeof(int));
 
     int i;
