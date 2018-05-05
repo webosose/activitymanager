@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2018 LG Electronics, Inc.
 //
+//      Copyright (c) 2009-2018 LG Electronics, Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -64,7 +65,7 @@ MojErr ActivityCallback::call(MojObject activityInfo)
     m_call = std::make_shared<LunaWeakPtrCall<ActivityCallback>>(
             std::dynamic_pointer_cast<ActivityCallback, AbstractCallback>(shared_from_this()),
             &ActivityCallback::handleResponse, false, m_url, params);
-    m_call->call();
+    m_call->call(activity);
 
     return MojErrNone;
 }

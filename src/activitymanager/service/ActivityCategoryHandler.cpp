@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2018 LG Electronics, Inc.
 //
+//      Copyright (c) 2009-2018 LG Electronics, Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -366,9 +367,12 @@ MojErr ActivityCategoryHandler::createActivity(MojServiceMessage *msg, MojObject
     /* TODO : Refine this, when ACG migration is complete.
      * Until then, we allow the creator is set only for the configurator. */
     MojObject creator;
-    if (spec.get(_T("creator"), creator) &&
-            Subscription::getServiceName(msg) != "com.webos.service.configurator" &&
-            Subscription::getServiceName(msg) != "com.palm.configurator") {
+    bool privilegedCreator = false;
+    if (Subscription::getServiceName(msg) == "com.webos.service.configurator" ||
+        Subscription::getServiceName(msg) == "com.palm.configurator")
+        privilegedCreator = true;
+
+    if (spec.get(_T("creator"), creator) && !privilegedCreator) {
         LOG_AM_ERROR(MSGID_PBUS_CALLER_SETTING_CREATOR, 2,
                      PMLOGKS("sender", Subscription::getServiceName(msg).c_str()),
                      PMLOGKS("creator", MojoObjectJson(creator).c_str()),
@@ -422,11 +426,12 @@ MojErr ActivityCategoryHandler::createActivity(MojServiceMessage *msg, MojObject
         return MojErrNone;
     }
 
+    std::string requester = privilegedCreator ? Subscription::getServiceName(msg) : act->getCreator().getId();
     PermissionManager::PermissionCallback permissionCallback =
             std::bind(&ActivityCategoryHandler::finishCreateActivityPermissionCheck, this,
                       MojRefCountedPtr<MojServiceMessage>(msg), payload, act,
                       std::placeholders::_1, std::placeholders::_2);
-    checkAccessRight(Subscription::getServiceName(msg), act->getCallback(), act->getTriggers(),
+    checkAccessRight(requester, act->getCallback(), act->getTriggers(),
                      permissionCallback);
 
     ACTIVITY_SERVICEMETHOD_END(msg);
@@ -1213,11 +1218,12 @@ MojErr ActivityCategoryHandler::completeActivity(MojServiceMessage *msg, MojObje
                 triggerVec = ActivityExtractor::createTriggers(act, triggerSpec);
         }
 
+        std::string requester = act->getCreator().getId();
         PermissionManager::PermissionCallback permissionCallback =
                 std::bind(&ActivityCategoryHandler::finishCompleteActivityPermissionCheck, this,
                           MojRefCountedPtr<MojServiceMessage>(msg), payload, act, restart,
                           std::placeholders::_1, std::placeholders::_2);
-        checkAccessRight(Subscription::getServiceName(msg),
+        checkAccessRight(requester,
                          (callbackChanged ? callback : std::shared_ptr<AbstractCallback>()),
                          triggerVec,
                          permissionCallback);
