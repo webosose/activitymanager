@@ -9,6 +9,7 @@
         "signals.all.subscribe",
         "system",
         "telephony",
-        "time.query"
+        "time.query",
+        "all"
     ]
 }
