@@ -38,6 +38,8 @@ public:
 
     void checkAccessRight(std::string requester, std::vector<std::string> urls,
                           PermissionCallback callback);
+    static std::string getRequester(MojRefCountedPtr<MojServiceMessage> msg);
+
 
 private:
     struct SyncChecker: public MojSignalHandler {

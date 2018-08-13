@@ -18,6 +18,7 @@
 
 #include <glib.h>
 #include <luna/MojLunaMessage.h>
+#include <boost/algorithm/string.hpp>
 
 #include "activity/ActivityManager.h"
 #include "service/BusConnection.h"
@@ -42,6 +43,27 @@ MojErr PermissionManager::syncCheck(const std::string& requester, const std::str
     MojRefCountedPtr<PermissionManager::SyncChecker> checker(
             new PermissionManager::SyncChecker());
     return checker->check(requester, url);
+}
+
+std::string PermissionManager::getRequester(MojRefCountedPtr<MojServiceMessage> msg)
+{
+    MojLunaMessage *lunaMsg = dynamic_cast<MojLunaMessage *>(msg.get());
+    if (!lunaMsg) {
+        throw std::runtime_error("Can't generate requester string from non-Luna message");
+    }
+
+    const char *appId = lunaMsg->appId();
+    const char *serviceId = lunaMsg->senderId();
+    const char *requester = appId;
+    if (!requester)
+        requester = serviceId;
+    if (!requester)
+        return lunaMsg->senderAddress();
+
+    if (appId && serviceId && boost::algorithm::starts_with(serviceId, appId))
+        requester = serviceId;
+
+    return requester;
 }
 
 PermissionManager::SyncChecker::SyncChecker()

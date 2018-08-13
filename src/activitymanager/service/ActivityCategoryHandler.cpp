@@ -426,7 +426,7 @@ MojErr ActivityCategoryHandler::createActivity(MojServiceMessage *msg, MojObject
         return MojErrNone;
     }
 
-    std::string requester = privilegedCreator ? Subscription::getServiceName(msg) : act->getCreator().getId();
+    std::string requester = privilegedCreator ? Subscription::getServiceName(msg) : PermissionManager::getRequester(msg);
     PermissionManager::PermissionCallback permissionCallback =
             std::bind(&ActivityCategoryHandler::finishCreateActivityPermissionCheck, this,
                       MojRefCountedPtr<MojServiceMessage>(msg), payload, act,
@@ -1218,7 +1218,7 @@ MojErr ActivityCategoryHandler::completeActivity(MojServiceMessage *msg, MojObje
                 triggerVec = ActivityExtractor::createTriggers(act, triggerSpec);
         }
 
-        std::string requester = act->getCreator().getId();
+        std::string requester = PermissionManager::getRequester(msg);
         PermissionManager::PermissionCallback permissionCallback =
                 std::bind(&ActivityCategoryHandler::finishCompleteActivityPermissionCheck, this,
                           MojRefCountedPtr<MojServiceMessage>(msg), payload, act, restart,
