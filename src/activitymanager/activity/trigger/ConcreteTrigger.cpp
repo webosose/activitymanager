@@ -242,7 +242,7 @@ void ConcreteTrigger::setSatisfied(bool satisfied)
         }
     }
 
-    m_activity.lock()->onSuccessTrigger(shared_from_this(), valueChanged);
+    m_activity.lock()->onSuccessTrigger(shared_from_this(), valueChanged, valueChanged);
 }
 
 void ConcreteTrigger::unsetSatisfied()
