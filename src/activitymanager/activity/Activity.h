@@ -201,7 +201,7 @@ public:
     void setState(std::shared_ptr<AbstractActivityState> state);
 
     void setMessageForStart(MojServiceMessage *msg);
-    void respondForStart(std::shared_ptr<ITrigger> failed = NULL);
+    void respondForStart(std::string errorText = "");
 
 protected:
     /* Activity Manager may access "private" control interfaces. */

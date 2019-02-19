@@ -234,7 +234,13 @@ gboolean ActivityManager::_startActivity(gpointer data)
         return G_SOURCE_REMOVE;
     }
 
-    self->getState()->start(self);
+    try {
+        self->getState()->start(self);
+    } catch (const std::runtime_error& except) {
+        self->respondForStart(std::string("Failed to start activity: ") + except.what());
+        return G_SOURCE_REMOVE;
+    }
+
     return G_SOURCE_REMOVE;
 }
 

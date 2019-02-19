@@ -344,7 +344,7 @@ void Activity::onFailTrigger(std::shared_ptr<ITrigger> trigger)
 {
     LOG_AM_DEBUG("[Activity %llu] Trigger \"%s\" Fail", m_id, trigger->getName().c_str());
 
-    respondForStart(trigger);
+    respondForStart("Failed to subscribe trigger: " + trigger->getName());
 
     m_state->onTriggerFail(shared_from_this(), trigger);
 }
@@ -942,16 +942,14 @@ void Activity::requestScheduleActivity()
     ActivityManager::getInstance().informActivityInitialized(shared_from_this());
 }
 
-void Activity::respondForStart(std::shared_ptr<ITrigger> failed)
+void Activity::respondForStart(std::string errorText)
 {
     if (!m_msgForStart.get()) {
         return;
     }
 
-    if (failed.get()) {
-        (void) m_msgForStart->replyError(
-                MojErrInternal,
-                ("Failed to subscribe trigger: " + failed->getName()).c_str());
+    if (errorText.length() > 0) {
+        (void) m_msgForStart->replyError(MojErrInternal, errorText.c_str());
         m_msgForStart.reset();
         return;
     }
