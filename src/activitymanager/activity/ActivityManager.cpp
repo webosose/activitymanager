@@ -214,7 +214,7 @@ MojErr ActivityManager::startActivity(std::shared_ptr<Activity> act, MojServiceM
     LOG_AM_DEBUG("[Activity %llu] Start", act->getId());
 
     act->setMessageForStart(msg);
-    g_timeout_add(0, &ActivityManager::_startActivity, act.get());
+    g_timeout_add_full(G_PRIORITY_HIGH, 0, &ActivityManager::_startActivity, act.get(), NULL);
 
     return MojErrNone;
 }
