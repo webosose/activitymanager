@@ -156,6 +156,13 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
             LOG_AM_DEBUG("[Activity %llu] Trigger call \"%s\" failed, but subscription is still available.",
                          m_activity.lock()->getId(),
                          m_subscription->getURL().getString().c_str());
+            // This case may be considered a trigger failure,
+            // but activitymanager has not considered this as a failure. So keep this policy.
+            if (m_isSatisfied) {
+                m_isSatisfied = false;
+                statusChanged = true;
+            }
+            m_activity.lock()->onSuccessTrigger(shared_from_this(), statusChanged, valueChanged);
         } else {
             LOG_AM_WARNING("TRIGGER_FAIL", 4,
                            PMLOGKFV("Activity", "%llu", m_activity.lock()->getId()),
