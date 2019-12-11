@@ -158,11 +158,6 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
                          m_subscription->getURL().getString().c_str());
             // This case may be considered a trigger failure,
             // but activitymanager has not considered this as a failure. So keep this policy.
-            if (m_isSatisfied) {
-                m_isSatisfied = false;
-                statusChanged = true;
-            }
-            m_activity.lock()->onSuccessTrigger(shared_from_this(), statusChanged, valueChanged);
         } else {
             LOG_AM_WARNING("TRIGGER_FAIL", 4,
                            PMLOGKFV("Activity", "%llu", m_activity.lock()->getId()),
@@ -170,8 +165,8 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
                            PMLOGKS("url", m_subscription->getURL().getString().c_str()),
                            PMLOGJSON("Response", MojoObjectJson(response).c_str()), "");
             m_activity.lock()->onFailTrigger(shared_from_this());
+            return;
         }
-        return;
     }
 
     if (m_matcher->match(response)) {
