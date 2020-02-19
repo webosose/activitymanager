@@ -1414,7 +1414,8 @@ MojErr ActivityCategoryHandler::startActivity(MojServiceMessage *msg, MojObject&
     err = lookupActivity(msg, payload, act);
     MojErrCheck(err);
     if (!validateCaller(Subscription::getBusId(msg), act)) {
-        msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        err = msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        MojErrCheck(err);
         return MojErrNone;
     }
 
@@ -1513,7 +1514,8 @@ MojErr ActivityCategoryHandler::stopActivity(MojServiceMessage *msg, MojObject& 
     err = lookupActivity(msg, payload, act);
     MojErrCheck(err);
     if (!validateCaller(Subscription::getBusId(msg), act)) {
-        msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        err = msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        MojErrCheck(err);
         return MojErrNone;
     }
 
@@ -1650,7 +1652,8 @@ MojErr ActivityCategoryHandler::cancelActivity(MojServiceMessage *msg, MojObject
     err = lookupActivity(msg, payload, act);
     MojErrCheck(err);
     if (!validateCaller(Subscription::getBusId(msg), act)) {
-        msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        err = msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        MojErrCheck(err);
         return MojErrNone;
     }
 
@@ -1778,7 +1781,8 @@ MojErr ActivityCategoryHandler::pauseActivity(MojServiceMessage *msg, MojObject&
     err = lookupActivity(msg, payload, act);
     MojErrCheck(err);
     if (!validateCaller(Subscription::getBusId(msg), act)) {
-        msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        err = msg->replyError(MojErrAccessDenied, "caller is not a parent or creator");
+        MojErrCheck(err);
         return MojErrNone;
     }
 
