@@ -141,6 +141,12 @@ int main(int argc, char *argv[])
 
     request = json.stringify() + "\n";
 
+    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+        std::cerr << "Failed to create dir: " << strerror(errno) << std::endl;
+        exitcode = errno;
+        goto Exit;
+    }
+
     if ((pipeReq = open(AM_SEND_REQ_PIPE_PATH, O_WRONLY)) == -1) {
         std::cerr << "Failed to open request pipe: " << strerror(errno) << std::endl;
         exitcode = errno;
