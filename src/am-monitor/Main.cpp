@@ -101,6 +101,12 @@ int main(int argc, char *argv[])
         goto Exit;
     }
 
+    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+        std::cerr << "Failed to create dir: " << strerror(errno) << std::endl;
+        exitcode = errno;
+        goto Exit;
+    }
+
     if ((lock = open(AM_MONITOR_LOCK_PATH, O_WRONLY | O_CREAT, 0600)) == -1) {
         std::cerr << "Failed to open lock: " << strerror(errno) << std::endl;
         exitcode = errno;

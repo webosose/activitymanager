@@ -72,6 +72,11 @@ void ActivityMonitor::initialize()
 {
     LOG_AM_INFO("MONITOR_INFO", 0, "initialize");
 
+    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+        LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to create dir: %s", strerror(errno));
+        return;
+    }
+
     if (mkfifo(AM_MONITOR_REQ_PIPE_PATH, 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to create request pipe: %s", strerror(errno));

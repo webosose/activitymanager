@@ -22,13 +22,14 @@
 #define SCHEMA_ACTIVITYMANAGER_PATH     SCHEMA_DIR "/activitymanager.schema"
 
 // am-monitor
-#define AM_MONITOR_REQ_PIPE_PATH        "@WEBOS_INSTALL_RUNTIMEINFODIR@/am-monitor.req"
-#define AM_MONITOR_RESP_PIPE_PATH       "@WEBOS_INSTALL_RUNTIMEINFODIR@/am-monitor.resp"
-#define AM_MONITOR_LOCK_PATH            "@WEBOS_INSTALL_RUNTIMEINFODIR@/am-monitor.lock"
+#define AM_IPC_DIR                      "/tmp/activitymanager"
+#define AM_MONITOR_REQ_PIPE_PATH        AM_IPC_DIR "/am-monitor.req"
+#define AM_MONITOR_RESP_PIPE_PATH       AM_IPC_DIR "/am-monitor.resp"
+#define AM_MONITOR_LOCK_PATH            AM_IPC_DIR "/am-monitor.lock"
 
 // am-send
-#define AM_SEND_REQ_PIPE_PATH           "@WEBOS_INSTALL_RUNTIMEINFODIR@/am-send.req"
-#define AM_SEND_RESP_PIPE_PATH          "@WEBOS_INSTALL_RUNTIMEINFODIR@/am-send.resp"
+#define AM_SEND_REQ_PIPE_PATH           AM_IPC_DIR "/am-send.req"
+#define AM_SEND_RESP_PIPE_PATH          AM_IPC_DIR "/am-send.resp"
 
 // H/W and O/S info
 #define TARGET_DISTRO                   "@WEBOS_TARGET_DISTRO@"

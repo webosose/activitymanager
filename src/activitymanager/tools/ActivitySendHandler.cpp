@@ -46,6 +46,11 @@ ActivitySendHandler::~ActivitySendHandler()
 
 void ActivitySendHandler::initialize()
 {
+    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+        LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to create dir: %s", strerror(errno));
+        return;
+    }
+
     if (mkfifo(AM_SEND_REQ_PIPE_PATH, 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to create request pipe: %s", strerror(errno));
