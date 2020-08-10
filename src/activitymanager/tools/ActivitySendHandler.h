@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 LG Electronics, Inc.
+// Copyright (c) 2017-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #define __ACTIVITY_SEND_HANDLER_H__
 
 #include <glib.h>
+#include <string>
 
 class ActivitySendHandler {
 public:
@@ -39,6 +40,9 @@ private:
 
     int m_pipeReq;
     int m_pipeResp;
+    std::string m_ipcDir;
+    std::string m_reqPipePath;
+    std::string m_respPipePath;
 };
 
 #endif /* __ACTIVITY_SEND_HANDLER_H__ */

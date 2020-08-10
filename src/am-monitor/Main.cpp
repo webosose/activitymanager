@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 LG Electronics, Inc.
+// Copyright (c) 2017-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
     std::ifstream file;
     std::string line;
     struct timespec now;
+    std::string ipcDir;
 
     g_option_context_add_main_entries (context, OPTION_ENTRIES, NULL);
     g_option_context_set_description(context, OPTION_DESCRIPTION);
@@ -101,13 +102,19 @@ int main(int argc, char *argv[])
         goto Exit;
     }
 
-    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+    if (getuid() == 0) {
+        ipcDir = AM_IPC_DEFAULT_DIR;
+    } else {
+        ipcDir = AM_IPC_USER_DIR + to_string(getuid()) + "/activitymanager/";
+    }
+
+    if (g_mkdir_with_parents(ipcDir.c_str(), 0755) == -1) {
         std::cerr << "Failed to create dir: " << strerror(errno) << std::endl;
         exitcode = errno;
         goto Exit;
     }
 
-    if ((lock = open(AM_MONITOR_LOCK_PATH, O_WRONLY | O_CREAT, 0600)) == -1) {
+    if ((lock = open((ipcDir + AM_MONITOR_LOCK_FILE).c_str(), O_WRONLY | O_CREAT, 0600)) == -1) {
         std::cerr << "Failed to open lock: " << strerror(errno) << std::endl;
         exitcode = errno;
         goto Exit;
@@ -119,14 +126,14 @@ int main(int argc, char *argv[])
         goto Exit;
     }
 
-    if (mkfifo(AM_MONITOR_REQ_PIPE_PATH, 0600) < 0) {
+    if (mkfifo((ipcDir + AM_MONITOR_REQ_PIPE_FILE).c_str(), 0600) < 0) {
         if (errno != EEXIST) {
             std::cerr << "Failed to create request pipe: " << strerror(errno) << std::endl;
             goto Exit;
         }
     }
 
-    if ((pipeReq = open(AM_MONITOR_REQ_PIPE_PATH, O_WRONLY)) == -1) {
+    if ((pipeReq = open((ipcDir + AM_MONITOR_REQ_PIPE_FILE).c_str(), O_WRONLY)) == -1) {
         std::cerr << "Failed to open request pipe: " << strerror(errno) << std::endl;
         goto Exit;
     }
@@ -142,7 +149,7 @@ int main(int argc, char *argv[])
         goto Exit;
     }
 
-    file.open(AM_MONITOR_RESP_PIPE_PATH);
+    file.open((ipcDir + AM_MONITOR_RESP_PIPE_FILE).c_str());
     while (std::getline(file, line, '\n')) {
         pbnjson::JValue root = pbnjson::JDomParser::fromString(line);
         if (!root.isValid() || root.isNull()) {
