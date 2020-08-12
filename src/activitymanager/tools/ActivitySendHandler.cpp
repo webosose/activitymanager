@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 LG Electronics, Inc.
+// Copyright (c) 2017-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,13 @@ ActivitySendHandler::ActivitySendHandler()
     : m_pipeReq(-1)
     , m_pipeResp(-1)
 {
+    if (getuid() == 0) {
+        m_ipcDir = AM_IPC_DEFAULT_DIR;
+    } else {
+        m_ipcDir = AM_IPC_USER_DIR + to_string(getuid()) + "/activitymanager/";
+    }
+    m_reqPipePath = m_ipcDir + AM_SEND_REQ_PIPE_FILE;
+    m_respPipePath = m_ipcDir + AM_SEND_RESP_PIPE_FILE;
 }
 
 ActivitySendHandler::~ActivitySendHandler()
@@ -46,26 +53,26 @@ ActivitySendHandler::~ActivitySendHandler()
 
 void ActivitySendHandler::initialize()
 {
-    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+    if (g_mkdir_with_parents(m_ipcDir.c_str(), 0755) == -1) {
         LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to create dir: %s", strerror(errno));
         return;
     }
 
-    if (mkfifo(AM_SEND_REQ_PIPE_PATH, 0600) < 0) {
+    if (mkfifo(m_reqPipePath.c_str(), 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to create request pipe: %s", strerror(errno));
             return;
         }
     }
 
-    if (mkfifo(AM_SEND_RESP_PIPE_PATH, 0600) < 0) {
+    if (mkfifo(m_respPipePath.c_str(), 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to create response pipe: %s", strerror(errno));
             return;
         }
     }
 
-    if ((m_pipeReq = open(AM_SEND_REQ_PIPE_PATH, O_RDONLY | O_NONBLOCK)) == -1) {
+    if ((m_pipeReq = open(m_reqPipePath.c_str(), O_RDONLY | O_NONBLOCK)) == -1) {
         LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to open request pipe: %s", strerror(errno));
         return;
     }
@@ -84,7 +91,7 @@ gboolean ActivitySendHandler::onRead(GIOChannel* channel, GIOCondition condition
 
     std::ifstream file;
     std::string line;
-    file.open(AM_SEND_REQ_PIPE_PATH);
+    file.open(self->m_reqPipePath.c_str());
     std::getline(file, line);
     pbnjson::JValue request = pbnjson::JDomParser::fromString(line);
     pbnjson::JValue response = pbnjson::Object();
@@ -161,7 +168,7 @@ Return:
     }
     payload = response.stringify() + "\n";
 
-    if ((self->m_pipeResp = open(AM_SEND_RESP_PIPE_PATH, O_RDWR | O_NONBLOCK)) == -1) {
+    if ((self->m_pipeResp = open(self->m_respPipePath.c_str(), O_RDWR | O_NONBLOCK)) == -1) {
         LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to open response pipe: %s", strerror(errno));
     } else if (write(self->m_pipeResp, payload.c_str(), payload.length()) == -1) {
         LOG_AM_WARNING("AM_SEND_FAIL", 0, "Failed to write response pipe: %s", strerror(errno));

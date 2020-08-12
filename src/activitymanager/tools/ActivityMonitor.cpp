@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 LG Electronics, Inc.
+// Copyright (c) 2017-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,6 +35,13 @@ ActivityMonitor::ActivityMonitor()
     , m_isMonitorRunning(false)
     , m_channel(NULL)
 {
+    if (getuid() == 0) {
+        m_ipcDir = AM_IPC_DEFAULT_DIR;
+    } else {
+        m_ipcDir = AM_IPC_USER_DIR + to_string(getuid()) + "/activitymanager/";
+    }
+    m_reqPipePath = m_ipcDir + AM_MONITOR_REQ_PIPE_FILE;
+    m_respPipePath = m_ipcDir + AM_MONITOR_RESP_PIPE_FILE;
 }
 
 ActivityMonitor::~ActivityMonitor()
@@ -72,26 +79,26 @@ void ActivityMonitor::initialize()
 {
     LOG_AM_INFO("MONITOR_INFO", 0, "initialize");
 
-    if (g_mkdir_with_parents(AM_IPC_DIR, 0755) == -1) {
+    if (g_mkdir_with_parents(m_ipcDir.c_str(), 0755) == -1) {
         LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to create dir: %s", strerror(errno));
         return;
     }
 
-    if (mkfifo(AM_MONITOR_REQ_PIPE_PATH, 0600) < 0) {
+    if (mkfifo(m_reqPipePath.c_str(), 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to create request pipe: %s", strerror(errno));
             return;
         }
     }
 
-    if (mkfifo(AM_MONITOR_RESP_PIPE_PATH, 0600) < 0) {
+    if (mkfifo(m_respPipePath.c_str(), 0600) < 0) {
         if (errno != EEXIST) {
             LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to create response pipe: %s", strerror(errno));
             return;
         }
     }
 
-    if ((m_pipeReq = open(AM_MONITOR_REQ_PIPE_PATH, O_RDONLY | O_NONBLOCK)) == -1) {
+    if ((m_pipeReq = open(m_reqPipePath.c_str(), O_RDONLY | O_NONBLOCK)) == -1) {
         LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to open request pipe: %s", strerror(errno));
         return;
     }
@@ -112,7 +119,7 @@ gboolean ActivityMonitor::onRead(GIOChannel* channel, GIOCondition condition, gp
         goto Reset;
     }
 
-    file.open(AM_MONITOR_REQ_PIPE_PATH);
+    file.open(self.m_reqPipePath.c_str());
     std::getline(file, line);
 
     LOG_AM_INFO("MONITOR_INFO", 1, PMLOGKS("command", line.c_str()), "");
@@ -124,10 +131,10 @@ gboolean ActivityMonitor::onRead(GIOChannel* channel, GIOCondition condition, gp
     }
 
     if (self.m_pipeResp == -1) {
-        if ((self.m_pipeResp = open(AM_MONITOR_RESP_PIPE_PATH, O_WRONLY | O_NONBLOCK)) == -1) {
+        if ((self.m_pipeResp = open(self.m_respPipePath.c_str(), O_WRONLY | O_NONBLOCK)) == -1) {
             LOG_AM_INFO("MONITOR_INFO", 0, "Open response pipe: %s", strerror(errno));
             usleep(1000); // try again
-            if ((self.m_pipeResp = open(AM_MONITOR_RESP_PIPE_PATH, O_WRONLY | O_NONBLOCK)) == -1) {
+            if ((self.m_pipeResp = open(self.m_respPipePath.c_str(), O_WRONLY | O_NONBLOCK)) == -1) {
                 LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to open pipe: %s", strerror(errno));
                 goto Reset;
             }
@@ -162,7 +169,7 @@ void ActivityMonitor::send(std::shared_ptr<Activity> activity)
 
     if (m_pipeResp == -1) {
         LOG_AM_INFO("MONITOR_INFO", 0, "Pipe opening");
-        if ((m_pipeResp = open(AM_MONITOR_RESP_PIPE_PATH, O_WRONLY | O_NONBLOCK)) == -1) {
+        if ((m_pipeResp = open(m_respPipePath.c_str(), O_WRONLY | O_NONBLOCK)) == -1) {
             LOG_AM_WARNING("MONITOR_FAIL", 0, "Failed to open pipe: %s", strerror(errno));
             return;
         }
