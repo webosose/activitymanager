@@ -22,6 +22,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <glib.h>
+#ifdef INIT_MANAGER_systemd
+#include <systemd/sd-daemon.h>
+#endif
 
 #include "conf/Config.h"
 #include "tools/ActivityMonitor.h"
@@ -92,7 +95,11 @@ MojErr ActivityManagerApp::ready()
     /* Subscribe to timezone notifications. */
     ScheduleManager::getInstance().enable();
 
+#ifdef INIT_MANAGER_systemd
+    if (sd_notify(0, "READY=1\nSTATUS=ActivityManager is ready\n") <= 0) {
+#else
     if (::system("/sbin/initctl emit --no-wait activitymanager-ready") == -1) {
+#endif
         LOG_AM_ERROR(MSGID_UPSTART_EMIT_FAIL, 0,
                      "ServiceApp: Failed to emit upstart event");
     }

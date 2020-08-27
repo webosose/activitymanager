@@ -34,6 +34,17 @@ pkg_check_modules(PBNJSON_CPP REQUIRED pbnjson_cpp)
 include_directories(${PBNJSON_CPP_INCLUDE_DIRS})
 webos_add_compiler_flags(ALL ${PBNJSON_CPP_CFLAGS_OTHER})
 
+if (DEFINED INIT_MANAGER)
+    # add flag for ifdef
+    webos_add_compiler_flags(ALL -DINIT_MANAGER_${INIT_MANAGER})
+    # for systemd
+    if (${INIT_MANAGER} STREQUAL "systemd")
+        # -- check for libsystemd
+        pkg_check_modules(LIBINITMGR REQUIRED libsystemd)
+        webos_add_compiler_flags(ALL ${LIBINITMGR_CFLAGS})
+    endif()
+endif()
+
 pkg_check_modules(PMLOG REQUIRED PmLogLib>=3)
 include_directories(${PMLOG_INCLUDE_DIRS})
 webos_add_compiler_flags(ALL ${PMLOG_CFLAGS_OTHER})
@@ -61,6 +72,7 @@ set(LIBS ${DB8_LDFLAGS}
          ${LS2_LDFLAGS}
          ${PMLOG_LDFLAGS}
          ${PBNJSON_CPP_LDFLAGS}
+         ${LIBINITMGR_LDFLAGS}
 )
 target_link_libraries(activitymanager ${LIBS})
 
