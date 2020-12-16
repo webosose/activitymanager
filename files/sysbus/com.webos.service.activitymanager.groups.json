@@ -1,0 +1,9 @@
+{
+    "allowedNames" : [
+        "com.webos.service.activitymanager",
+        "com.webos.service.activitymanager.client"
+    ],
+    "activity.query": ["dev"],
+    "activity.operation": ["dev"],
+    "activity.wakeup": ["dev"]
+}

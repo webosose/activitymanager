@@ -1,44 +1,35 @@
 {
-    "activities": [
-        "com.webos.service.activitymanager/adopt",
-        "com.webos.service.activitymanager/cancel",
-        "com.webos.service.activitymanager/complete",
-        "com.webos.service.activitymanager/create",
-        "com.webos.service.activitymanager/release",
-        "com.webos.service.activitymanager/start",
-        "com.webos.service.activitymanager/stop"
+"activity.query": [
+    "com.webos.service.activitymanager/getActivityInfo",
+    "com.webos.service.activitymanager/getDetails",
+    "com.webos.service.activitymanager/getManagerInfo",
+    "com.webos.service.activitymanager/info",
+    "com.webos.service.activitymanager/list",
+    "com.webos.service.activitymanager/monitor",
+    "com.webos.service.config/getConfigs"
     ],
-    "activities.callbacks": [
-        "com.webos.service.config/setConfigs",
-        "com.webos.service.config/getConfigs"
+"activity.operation": [
+    "com.webos.service.activitymanager/adopt",
+    "com.webos.service.activitymanager/cancel",
+    "com.webos.service.activitymanager/complete",
+    "com.webos.service.activitymanager/create",
+    "com.webos.service.activitymanager/release",
+    "com.webos.service.activitymanager/start",
+    "com.webos.service.activitymanager/stop",
+    "com.webos.service.activitymanager/pause",
+    "com.webos.service.activitymanager/join",
+    "com.webos.service.activitymanager/addFocus",
+    "com.webos.service.activitymanager/devel/concurrency",
+    "com.webos.service.activitymanager/devel/evict",
+    "com.webos.service.activitymanager/devel/priorityControl",
+    "com.webos.service.activitymanager/devel/run",
+    "com.webos.service.activitymanager/disable",
+    "com.webos.service.activitymanager/enable",
+    "com.webos.service.activitymanager/focus",
+    "com.webos.service.activitymanager/unfocus",
+    "com.webos.service.config/setConfigs"    
     ],
-    "activities.manage": [
-        "com.webos.service.activitymanager/adopt",
-        "com.webos.service.activitymanager/callback/scheduledwakeup",
-        "com.webos.service.activitymanager/cancel",
-        "com.webos.service.activitymanager/complete",
-        "com.webos.service.activitymanager/create",
-        "com.webos.service.activitymanager/getActivityInfo",
-        "com.webos.service.activitymanager/getDetails",
-        "com.webos.service.activitymanager/getManagerInfo",
-        "com.webos.service.activitymanager/info",
-        "com.webos.service.activitymanager/join",
-        "com.webos.service.activitymanager/list",
-        "com.webos.service.activitymanager/monitor",
-        "com.webos.service.activitymanager/pause",
-        "com.webos.service.activitymanager/release",
-        "com.webos.service.activitymanager/start",
-        "com.webos.service.activitymanager/stop"
-    ],
-    "activities.private": [
-        "com.webos.service.activitymanager/addFocus",
-        "com.webos.service.activitymanager/devel/concurrency",
-        "com.webos.service.activitymanager/devel/evict",
-        "com.webos.service.activitymanager/devel/priorityControl",
-        "com.webos.service.activitymanager/devel/run",
-        "com.webos.service.activitymanager/disable",
-        "com.webos.service.activitymanager/enable",
-        "com.webos.service.activitymanager/focus",
-        "com.webos.service.activitymanager/unfocus"
+"activity.wakeup": [
+    "com.webos.service.activitymanager/callback/scheduledwakeup"
     ]
 }
