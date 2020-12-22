@@ -1,6 +1,7 @@
 {
     "exeName": "@WEBOS_INSTALL_SBINDIR@/activitymanager",
     "type": "privileged",
+    "trustLevel" : "oem",
     "allowedNames": [
         "com.webos.service.activitymanager",
         "com.webos.service.activitymanager.client"

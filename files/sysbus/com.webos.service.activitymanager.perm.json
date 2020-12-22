@@ -4,12 +4,18 @@
         "all"
     ],
     "com.webos.service.activitymanager.client": [
-        "database",
+        "database.operation",
+        "database.profiling",
+        "tempdatabase.operation",
+        "tempdatabase.profiling",
+        "mediadatabase.operation",
+        "mediadatabase.profiling",
         "networking.query",
         "signals.all.subscribe",
         "system",
         "telephony",
         "time.query",
+        "time.management",
         "all"
     ]
 }
