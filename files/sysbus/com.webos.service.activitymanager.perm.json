@@ -5,11 +5,15 @@
     ],
     "com.webos.service.activitymanager.client": [
         "database",
-        "networking.query",
+        "networkconnection.query",
+        "networkconnection.management",
+        "wan.query",
+        "wifi.query",
         "signals.all.subscribe",
         "system",
         "telephony",
         "time.query",
+        "systemsettings.management",
         "all"
     ]
 }
