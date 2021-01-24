@@ -1,15 +1,18 @@
 {
     "com.webos.service.activitymanager": [
-        "activities.callbacks",
-        "all"
+        "boot.query",
+        "networkconnection.query",
+        "sleep.operation",
+        "time.query",
+        "database.operation",
+        "systemconfig.query"
     ],
     "com.webos.service.activitymanager.client": [
-        "database",
-        "networking.query",
-        "signals.all.subscribe",
-        "system",
-        "telephony",
+        "boot.query",
+        "networkconnection.query",
+        "sleep.operation",
         "time.query",
-        "all"
+        "database.operation",
+        "systemconfig.query"
     ]
 }
