@@ -5,7 +5,8 @@
         "sleep.operation",
         "time.query",
         "database.operation",
-        "systemconfig.query"
+        "systemconfig.query",
+        "hub.query"
     ],
     "com.webos.service.activitymanager.client": [
         "boot.query",
@@ -13,6 +14,7 @@
         "sleep.operation",
         "time.query",
         "database.operation",
-        "systemconfig.query"
+        "systemconfig.query",
+        "hub.query"
     ]
 }
