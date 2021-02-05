@@ -1,5 +1,7 @@
 {
     "com.webos.service.activitymanager": [
+    "application.operation",
+    "notification.operation",
     "boot.query",
     "networkconnection.query",
     "sleep.operation",
@@ -9,9 +11,21 @@
     "systemconfig.management",
     "systemconfig.query",
     "boot.management",
-    "settings.query"
+    "settings.query",
+    "tempdatabase.operation",
+    "epgdatabase.operation",
+    "keymgrdatabase.operation",
+    "mediadatabase.operation",
+    "filecache.management",
+    "epgdatabase.management",
+    "keymgrdatabase.management",
+    "tempdatabase.management",
+    "mediadatabase.management",
+    "database.management"
     ],
     "com.webos.service.activitymanager.client": [
+    "application.operation",
+    "notification.operation",
     "boot.query",
     "networkconnection.query",
     "sleep.operation",
@@ -21,6 +35,16 @@
     "systemconfig.management",
     "systemconfig.query",
     "boot.management",
-    "settings.query"
+    "settings.query",
+    "tempdatabase.operation",
+    "epgdatabase.operation",
+    "keymgrdatabase.operation",
+    "mediadatabase.operation",
+    "filecache.management",
+    "epgdatabase.management",
+    "keymgrdatabase.management",
+    "tempdatabase.management",
+    "mediadatabase.management",
+    "database.management"
     ]
 }
