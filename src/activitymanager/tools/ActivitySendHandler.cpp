@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 LG Electronics, Inc.
+// Copyright (c) 2017-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -111,6 +111,9 @@ gboolean ActivitySendHandler::onRead(GIOChannel* channel, GIOCondition condition
             errorText = error.what();
             goto Return;
         }
+    } else {
+        errorText = "Unable to read the file";
+        goto Return;
     }
 
     if (request.hasKey("clear")) {
