@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2018 LG Electronics, Inc.
+// Copyright (c) 2015-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,6 +64,16 @@ std::string PermissionManager::getRequester(MojRefCountedPtr<MojServiceMessage> 
         requester = serviceId;
 
     return requester;
+}
+
+std::string PermissionManager::getRequesterExeName(MojRefCountedPtr<MojServiceMessage> msg)
+{
+    MojLunaMessage *lunaMsg = dynamic_cast<MojLunaMessage *>(msg.get());
+    if (!lunaMsg) {
+        throw std::runtime_error("Can't generate requester exe name from non-Luna message");
+    }
+    const char *exeName = lunaMsg->senderExePath();
+    return exeName;
 }
 
 PermissionManager::SyncChecker::SyncChecker()
@@ -172,13 +182,6 @@ int PermissionManager::processQueue(void* ctx)
     for (const std::string& method : vec) {
         if ((err = self->syncCheck(requester, method)) != MojErrNone) {
             callback(err, "'" + requester + errorText);
-            goto Exit;
-        }
-    }
-
-    for (const std::string& method : vec) {
-        if ((err = self->syncCheck(ActivityManager::kServiceName, method)) != MojErrNone) {
-            callback(err, "'" + (ActivityManager::kServiceName + errorText));
             goto Exit;
         }
     }

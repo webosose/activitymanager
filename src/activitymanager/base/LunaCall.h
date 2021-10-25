@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public:
 
     MojErr call();
     MojErr call(std::shared_ptr<Activity> activity);
-    MojErr call(std::string proxyRequester);
+    MojErr call(std::string proxyRequester,std::string requesterExeName);
 
     MojErr retry();
     MojErr callStatus();
@@ -94,6 +94,7 @@ protected:
     MojRefCountedPtr<LunaCall::LunaCallMessageHandler> m_statusHandler;
 
     std::string m_proxyRequester;
+    std::string m_proxyRequesterExe;
 
     unsigned m_serial;
     unsigned m_subSerial;

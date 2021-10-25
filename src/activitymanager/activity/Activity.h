@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,6 +66,9 @@ public:
     void setCreator(const Subscriber& creator);
     void setCreator(const BusId& creator);
     const BusId& getCreator() const;
+
+    void setRequesterExeName(const std::string& creatorExe);
+    const std::string& getRequesterExeName() const;
 
     void setImmediate(bool immediate);
     bool isImmediate() const;
@@ -274,6 +277,7 @@ protected:
     std::string m_description;
     activityId_t m_id;
     BusId m_creator;
+    std::string m_requesterExeName;
 
     /* Externally supplied metadata in JSON format.  This will be stored
      * and returned with the Activity, and allows for more flexible tagging

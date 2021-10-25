@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2021 LG Electronics, Inc.
 //
 //      Copyright (c) 2009-2018 LG Electronics, Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -427,6 +427,8 @@ MojErr ActivityCategoryHandler::createActivity(MojServiceMessage *msg, MojObject
     }
 
     std::string requester = privilegedCreator ? Subscription::getServiceName(msg) : PermissionManager::getRequester(msg);
+    std::string requesterExeName = PermissionManager::getRequesterExeName(msg);
+    act->setRequesterExeName(requesterExeName);
     PermissionManager::PermissionCallback permissionCallback =
             std::bind(&ActivityCategoryHandler::finishCreateActivityPermissionCheck, this,
                       MojRefCountedPtr<MojServiceMessage>(msg), payload, act,
