@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,16 +50,16 @@ LunaCall::~LunaCall()
 MojErr LunaCall::call()
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
-    return call("");
+    return call("","");
 }
 
 MojErr LunaCall::call(std::shared_ptr<Activity> activity)
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
-    return call(activity->getCreator().getId());
+    return call(activity->getCreator().getId(),activity->getRequesterExeName());
 }
 
-MojErr LunaCall::call(std::string proxyRequester)
+MojErr LunaCall::call(std::string proxyRequester, std::string requesterExeName)
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
 
@@ -90,7 +90,8 @@ MojErr LunaCall::call(std::string proxyRequester)
         err = service->createRequest(req);
         MojErrCheck(err);
     } else {
-        err = service->createRequest(req, proxyRequester.c_str());
+        LOG_AM_DEBUG("Calling LSCallProxy for requester: %s ", proxyRequester.c_str());
+        err = service->createRequest(req, requesterExeName.c_str(),"",proxyRequester.c_str());
         MojErrCheck(err);
     }
 
@@ -105,6 +106,7 @@ MojErr LunaCall::call(std::string proxyRequester)
     /* Store handler for later cancel... */
     m_handler = handler;
     m_proxyRequester = proxyRequester;
+    m_proxyRequesterExe = requesterExeName;
 
     return MojErrNone;
 }
@@ -122,7 +124,7 @@ MojErr LunaCall::retry()
 
     usleep(100 * 1000);
 
-    return call(m_proxyRequester);
+    return call(m_proxyRequester,m_proxyRequesterExe);
 }
 
 MojErr LunaCall::callStatus()
@@ -260,7 +262,7 @@ void LunaCall::handleStatusResponseWrapper(MojServiceMessage *msg, MojObject& re
         return;
     }
 
-    call(m_proxyRequester);
+    call(m_proxyRequester,m_proxyRequesterExe);
     m_statusHandler->cancel();
 }
 

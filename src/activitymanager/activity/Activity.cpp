@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -102,6 +102,16 @@ void Activity::setCreator(const Subscriber& creator)
 void Activity::setCreator(const BusId& creator)
 {
     m_creator = creator;
+}
+
+void Activity::setRequesterExeName(const std::string& creatorExe)
+{
+    m_requesterExeName = creatorExe;
+}
+
+const std::string& Activity::getRequesterExeName() const
+{
+    return m_requesterExeName;
 }
 
 const BusId& Activity::getCreator() const
@@ -1559,6 +1569,9 @@ MojErr Activity::toJson(MojObject& rep, unsigned flags) const
     MojErrCheck(err);
 
     err = rep.put(_T("creator"), creator);
+    MojErrCheck(err);
+ 
+    err = rep.putString(_T("requesterExeName"),m_requesterExeName.c_str());
     MojErrCheck(err);
 
     if (!(flags & ACTIVITY_JSON_PERSIST)) {
