@@ -86,13 +86,31 @@ MojErr LunaCall::call(std::string proxyRequester, std::string requesterExeName)
         service = &BusConnection::getInstance().getClient();
     else
         service = &BusConnection::getInstance().getService();
+
     if (proxyRequester.empty()) {
         err = service->createRequest(req);
         MojErrCheck(err);
     } else {
-        LOG_AM_DEBUG("Calling LSCallProxy for requester: %s ", proxyRequester.c_str());
-        err = service->createRequest(req, requesterExeName.c_str(),"",proxyRequester.c_str());
-        MojErrCheck(err);
+        LOG_AM_DEBUG("Proxy Requester service: %s ", proxyRequester.c_str());
+        const MojChar* const busServiceName1 = "com.palm.bus";
+        const MojChar* const busServiceName2 = "com.palm.luna.bus";
+        const MojChar* const busServiceName3 = "com.webos.service.bus";
+        MojString targetService;
+        targetService.assign(m_url.getTargetService());
+        if( targetService.compare(busServiceName1) == 0 ||
+           targetService.compare(busServiceName2) == 0 ||
+           targetService.compare(busServiceName3) == 0 )
+        {
+             LOG_AM_DEBUG("Use LSCall for target service: %s", targetService.data());
+             err = service->createRequest(req, proxyRequester.c_str());
+             MojErrCheck(err);
+        }
+        else
+        {
+             LOG_AM_DEBUG("Use LSCallProxy for target service: %s", targetService.data());
+             err = service->createRequest(req, requesterExeName.c_str(),"",proxyRequester.c_str());
+             MojErrCheck(err);
+        }
     }
 
     MojRefCountedPtr<LunaCall::LunaCallMessageHandler> handler(
