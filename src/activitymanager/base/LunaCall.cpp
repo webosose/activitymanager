@@ -110,13 +110,6 @@ MojErr LunaCall::call(std::string proxyRequester, std::string requesterExeName)
              err = service->createRequest(req, proxyRequester.c_str());
              MojErrCheck(err);
         }
-        else if(targetService.compare(creator) == 0)
-        {
-             LOG_AM_DEBUG("Use LSCall if caller and callee are same. Caller: %s  Callee: %s", 
-                          creator.data(), targetService.data());
-             err = service->createRequest(req, proxyRequester.c_str());
-             MojErrCheck(err);
-        }  
         else
         {
              LOG_AM_DEBUG("Use LSCallProxy for target service: %s", targetService.data());
