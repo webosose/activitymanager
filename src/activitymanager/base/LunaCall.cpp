@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2021 LG Electronics, Inc.
+// Copyright (c) 2009-2022 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -95,16 +95,13 @@ MojErr LunaCall::call(std::string proxyRequester, std::string requesterExeName)
         const MojChar* const busServiceName1 = "com.palm.bus";
         const MojChar* const busServiceName2 = "com.palm.luna.bus";
         const MojChar* const busServiceName3 = "com.webos.service.bus";
-        const MojChar* const lunaServiceName = "com.webos.lunasend";
 
         MojString targetService;
-        MojString creator;
         targetService.assign(m_url.getTargetService());
-        creator.assign( proxyRequester.c_str());
+
         if( targetService.compare(busServiceName1) == 0 ||
             targetService.compare(busServiceName2) == 0 ||
-            targetService.compare(busServiceName3) == 0 ||
-            creator.compare(lunaServiceName) == 0)
+            targetService.compare(busServiceName3) == 0 )
         {
              LOG_AM_DEBUG("Use LSCall for target service: %s", targetService.data());
              err = service->createRequest(req, proxyRequester.c_str());
