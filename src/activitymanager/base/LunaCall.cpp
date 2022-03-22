@@ -95,13 +95,15 @@ MojErr LunaCall::call(std::string proxyRequester, std::string requesterExeName)
         const MojChar* const busServiceName1 = "com.palm.bus";
         const MojChar* const busServiceName2 = "com.palm.luna.bus";
         const MojChar* const busServiceName3 = "com.webos.service.bus";
+        const MojChar* const busServiceName4 = "com.palm.lunabus";
 
         MojString targetService;
         targetService.assign(m_url.getTargetService());
 
         if( targetService.compare(busServiceName1) == 0 ||
             targetService.compare(busServiceName2) == 0 ||
-            targetService.compare(busServiceName3) == 0 )
+            targetService.compare(busServiceName3) == 0 ||
+            targetService.compare(busServiceName4) == 0 )
         {
              LOG_AM_DEBUG("Use LSCall for target service: %s", targetService.data());
              err = service->createRequest(req, proxyRequester.c_str());
