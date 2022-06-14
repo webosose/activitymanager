@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2022 LG Electronics, Inc.
 //
 //      Copyright (c) 2009-2018 LG Electronics, Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,6 +47,7 @@ MojErr ActivityCallback::call(MojObject activityInfo)
     activity = m_activity.lock();
 
     /* Update the command sequence Serial number */
+    srandom(time(0));
     setSerial((unsigned) ::random() % UINT_MAX);
 
     LOG_AM_DEBUG("[Activity %llu] Callback %s: Calling [Serial %u]",

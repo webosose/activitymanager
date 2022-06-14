@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2022 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ AbstractScheduleManager::AbstractScheduleManager()
      * an hour spread would be ok, but there are longitudes with less
      * subscribers, so spreading the more populated neighbors farther will
      * still help.) */
+    srandom(time(0));
     m_smartBase = (23 * 60 * 60) + (random() % (6 * 60 * 60));
 }
 
