@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,19 +36,12 @@ class ActivityCategoryHandler : public MojService::CategoryHandler {
 private:
     static const MojChar* const CreateSchema;
     static const MojChar* const ReleaseSchema;
-    static const MojChar* const MonitorSchema;
-    static const MojChar* const JoinSchema;
     static const MojChar* const PauseSchema;
-    static const MojChar* const FocusSchema;
-    static const MojChar* const UnfocusSchema;
     static const MojChar* const AdoptSchema;
     static const MojChar* const CompleteSchema;
     static const MojChar* const StartSchema;
     static const MojChar* const StopSchema;
     static const MojChar* const CancelSchema;
-    static const MojChar* const AddFocusSchema;
-    static const MojChar* const ListSchema;
-    static const MojChar* const GetDetailsSchema;
     static const MojChar* const GetActivityInfoSchema;
 
 public:
@@ -63,8 +56,6 @@ public:
 protected:
     /* Lifecycle Methods */
     MojErr createActivity(MojServiceMessage *msg, MojObject& payload);
-    MojErr joinActivity(MojServiceMessage *msg, MojObject& payload);
-    MojErr monitorActivity(MojServiceMessage *msg, MojObject& payload);
     MojErr releaseActivity(MojServiceMessage *msg, MojObject& payload);
     MojErr adoptActivity(MojServiceMessage *msg, MojObject& payload);
     MojErr completeActivity(MojServiceMessage *msg, MojObject& payload);
@@ -103,8 +94,6 @@ protected:
                               bool succeeded);
 
     /* Introspection */
-    MojErr listActivities(MojServiceMessage *msg, MojObject& payload);
-    MojErr getActivityDetails(MojServiceMessage *msg, MojObject& payload);
     MojErr getActivityInfo(MojServiceMessage *msg, MojObject& payload);
 
     /* Debugging/Information Methods */
@@ -153,17 +142,6 @@ protected:
     static const SchemaMethod s_methods[];
 
     std::shared_ptr<PermissionManager> m_pm;
-};
-
-class DevelCategoryHandler : public MojService::CategoryHandler {
-public:
-    DevelCategoryHandler() {
-        addMethod("concurrency", (Callback) &ActivityCategoryHandler::replyDeprecatedMethod);
-        addMethod("evict", (Callback) &ActivityCategoryHandler::replyDeprecatedMethod);
-        addMethod("priorityControl", (Callback) &ActivityCategoryHandler::replyDeprecatedMethod);
-        addMethod("run", (Callback) &ActivityCategoryHandler::replyDeprecatedMethod);
-    }
-    virtual ~DevelCategoryHandler() {}
 };
 
 #endif /* __ACTIVITY_CATEGORY_HANDLER_H__ */

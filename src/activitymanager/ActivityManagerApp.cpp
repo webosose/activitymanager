@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2018 LG Electronics, Inc.
+// Copyright (c) 2009-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -168,12 +168,6 @@ MojErr ActivityManagerApp::online()
     MojErrCheck(err);
 
     err = BusConnection::getInstance().getService().addCategory("/callback", m_callbackHandler.get());
-    MojErrCheck(err);
-
-    m_develHandler.reset(new DevelCategoryHandler());
-    MojAllocCheck(m_develHandler.get());
-
-    err = BusConnection::getInstance().getService().addCategory("/devel", m_develHandler.get());
     MojErrCheck(err);
 
     return MojErrNone;
