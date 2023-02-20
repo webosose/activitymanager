@@ -119,7 +119,9 @@ void TriggerSubscriptionExclusive::subscribe()
             m_url,
             m_params,
             LunaCall::kUnlimited);
-    m_call->call(std::dynamic_pointer_cast<ConcreteTrigger, ConcreteTrigger>(
-            m_trigger.lock())->getActivity());
+    if (m_call != nullptr) {
+        m_call->call(std::dynamic_pointer_cast<ConcreteTrigger, ConcreteTrigger>(
+                m_trigger.lock())->getActivity());
+    }
 }
 

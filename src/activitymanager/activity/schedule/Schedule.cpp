@@ -115,10 +115,14 @@ bool Schedule::isQueued() const
 void Schedule::scheduled()
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
-    LOG_AM_DEBUG("[Activity %llu] Scheduled", m_activity.lock()->getId());
+    auto activity_ptr = m_activity.lock();
+    if (!activity_ptr) {
+        return;
+    }
+    LOG_AM_DEBUG("[Activity %llu] Scheduled", activity_ptr->getId());
 
     m_scheduled = true;
-    m_activity.lock()->scheduled();
+   activity_ptr->scheduled();
 }
 
 bool Schedule::isScheduled() const

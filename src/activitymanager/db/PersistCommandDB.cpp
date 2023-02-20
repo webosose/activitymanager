@@ -65,7 +65,7 @@ void DB8StoreCommand::updateParams(MojObject& params)
 
     std::shared_ptr<PersistTokenDB> pt =
             std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(m_activity->getPersistToken());
-    if (pt->isValid()) {
+    if(pt && pt->isValid()) {
         err = pt->toJson(rep);
         MojErrAccumulate(errs, err);
     }
@@ -170,23 +170,24 @@ void DB8StoreCommand::persistResponse(MojServiceMessage *msg,
 
     std::shared_ptr<PersistTokenDB> pt =
             std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(m_activity->getPersistToken());
-
-    try {
-        if (!pt->isValid()) {
-            pt->set(id, rev);
-        } else {
-            pt->update(id, rev);
+    if (pt != nullptr){
+        try {
+            if (!pt->isValid()) {
+                pt->set(id, rev);
+            } else {
+                pt->update(id, rev);
+            }
+        } catch (...) {
+            LOG_AM_ERROR(MSGID_PERSIST_TOKEN_VAL_UPDATE_FAIL, 2,
+                        PMLOGKFV("activity","%llu",m_activity->getId()),
+                        PMLOGKS("persist_command",getString().c_str()),
+                        "Failed to set or update value of persist token");
+            complete(false);
+            return;
         }
-    } catch (...) {
-        LOG_AM_ERROR(MSGID_PERSIST_TOKEN_VAL_UPDATE_FAIL, 2,
-                     PMLOGKFV("activity","%llu",m_activity->getId()),
-                     PMLOGKS("persist_command",getString().c_str()),
-                     "Failed to set or update value of persist token");
-        complete(false);
-        return;
-    }
 
-    DB8Command::persistResponse(msg, response, err);
+       DB8Command::persistResponse(msg, response, err);
+    }
 }
 
 /*
@@ -219,21 +220,22 @@ void DB8DeleteCommand::updateParams(MojObject& params)
 
     std::shared_ptr<PersistTokenDB> pt =
             std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(m_activity->getPersistToken());
+    if (pt != nullptr){
+        MojObject idsArray;
+        MojErr errs = MojErrNone;
+        MojErr err = idsArray.push(pt->getId());
+        MojErrAccumulate(errs, err);
 
-    MojObject idsArray;
-    MojErr errs = MojErrNone;
-    MojErr err = idsArray.push(pt->getId());
-    MojErrAccumulate(errs, err);
+        err = params.put(_T("ids"), idsArray);
+        MojErrAccumulate(errs, err);
 
-    err = params.put(_T("ids"), idsArray);
-    MojErrAccumulate(errs, err);
-
-    if (errs) {
-        LOG_AM_WARNING(MSGID_PERSIST_ATMPT_UNEXPECTD_EXCPTN, 3,
-                       PMLOGKFV("Activity", "%llu", m_activity->getId()),
-                       PMLOGKS("PersistCommand", getString().c_str()),
-                       PMLOGKFV("err", "%d", errs),
-                       "Failed to make DB update query");
+        if (errs) {
+            LOG_AM_WARNING(MSGID_PERSIST_ATMPT_UNEXPECTD_EXCPTN, 3,
+                        PMLOGKFV("Activity", "%llu", m_activity->getId()),
+                        PMLOGKS("PersistCommand", getString().c_str()),
+                        PMLOGKFV("err", "%d", errs),
+                        "Failed to make DB update query");
+        }
     }
 }
 
@@ -250,7 +252,9 @@ void DB8DeleteCommand::persistResponse(MojServiceMessage *msg,
         std::shared_ptr<PersistTokenDB> pt =
                 std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(m_activity->getPersistToken());
 
-        pt->clear();
+        if (pt != nullptr) {
+           pt->clear();
+        }
     }
 
     DB8Command::persistResponse(msg, response, err);

@@ -108,8 +108,10 @@ gboolean ActivitySendHandler::onRead(GIOChannel* channel, GIOCondition condition
         try {
             activity = ActivityManager::getInstance().getActivity(id);
         } catch (std::runtime_error& error) {
-            errorText = error.what();
-            goto Return;
+          const char* errorMsg = error.what();
+          if(errorMsg)
+            errorText = errorMsg;
+          goto Return;
         }
     } else {
         errorText = "Unable to read the file";
