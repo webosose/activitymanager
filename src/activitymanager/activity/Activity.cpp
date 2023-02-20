@@ -649,11 +649,15 @@ MojErr Activity::release(const BusId& caller)
         LOG_AM_DEBUG("[Activity %llu] Has already been released", m_id);
         return MojErrAccessDenied;
     }
+     auto parent_ptr = m_parent.lock();
+    if (!parent_ptr) {
+        return MojErrAccessDenied;
+    }
 
-    if (m_parent.lock()->getSubscriber() != caller) {
+    if (parent_ptr->getSubscriber() != caller) {
         LOG_AM_DEBUG("[Activity %llu] %s failed to release, as %s is currently the parent",
                      m_id, caller.getString().c_str(),
-                     m_parent.lock()->getSubscriber().getString().c_str());
+                    parent_ptr->getSubscriber().getString().c_str());
         return MojErrAccessDenied;
     }
 
@@ -1295,7 +1299,12 @@ void Activity::doAdopt()
     m_parent = m_adopters.front();
     m_adopters.pop_front();
 
-    m_parent.lock()->queueEvent(kActivityOrphanEvent);
+    auto parent_ptr = m_parent.lock();
+    if (!parent_ptr) {
+        return;
+    }
+
+    parent_ptr->queueEvent(kActivityOrphanEvent);
 
     m_released = false;
     if (m_ending) {
@@ -1304,7 +1313,7 @@ void Activity::doAdopt()
     m_ending = false;
 
     LOG_AM_DEBUG("[Activity %llu] Adopted by %s", m_id,
-                 m_parent.lock()->getSubscriber().getString().c_str());
+                 parent_ptr->getSubscriber().getString().c_str());
 }
 
 void Activity::doRunActivity()

@@ -55,22 +55,30 @@ AbstractPowerActivity::PowerState NoopPowerActivity::getPowerState() const
 void NoopPowerActivity::begin()
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
-    LOG_AM_DEBUG("[Activity %llu] Locking power on", m_activity.lock()->getId());
+    auto activity_ptr = m_activity.lock();
+    if (!activity_ptr) {
+        return;
+    }
+    LOG_AM_DEBUG("[Activity %llu] Locking power on", activity_ptr->getId());
 
     if (m_state != kPowerLocked) {
         m_state = kPowerLocked;
-        m_activity.lock()->powerLockedNotification();
+        activity_ptr->powerLockedNotification();
     }
 }
 
 void NoopPowerActivity::end()
 {
     LOG_AM_TRACE("Entering function %s", __FUNCTION__);
-    LOG_AM_DEBUG("[Activity %llu] Unlocking power", m_activity.lock()->getId());
+    auto activity_ptr = m_activity.lock();
+    if (!activity_ptr) {
+        return;
+    }
+    LOG_AM_DEBUG("[Activity %llu] Unlocking power", activity_ptr->getId());
 
     if (m_state != kPowerUnlocked) {
         m_state = kPowerUnlocked;
-        m_activity.lock()->powerUnlockedNotification();
+        activity_ptr->powerUnlockedNotification();
     }
 }
 

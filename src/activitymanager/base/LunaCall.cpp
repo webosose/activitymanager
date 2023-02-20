@@ -348,7 +348,7 @@ bool LunaCall::isProtocolError(MojServiceMessage *msg, const MojObject& response
     if (!category) {
         return false;
     } else {
-        return (!strcmp(LUNABUS_ERROR_CATEGORY, lunaMsg->category()));
+        return (!strcmp(LUNABUS_ERROR_CATEGORY, category));
     }
 }
 

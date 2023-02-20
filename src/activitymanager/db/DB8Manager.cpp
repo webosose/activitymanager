@@ -195,35 +195,36 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                 std::shared_ptr<Activity> old = ActivityManager::getInstance().getActivity(act->getId());
                 std::shared_ptr<PersistTokenDB> oldPt =
                         std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(old->getPersistToken());
+                if (oldPt && pt && act) {
+                    if (pt->getRev() > oldPt->getRev()) {
+                        LOG_AM_WARNING(
+                                MSGID_ACTIVITY_REPLACED,
+                                4,
+                                PMLOGKFV("Activity", "%llu", act->getId()),
+                                PMLOGKFV("revision", "%llu", (unsigned long long)pt->getRev()),
+                                PMLOGKFV("old_Activity", "%llu", old->getId()),
+                                PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
+                                "");
 
-                if (pt->getRev() > oldPt->getRev()) {
-                    LOG_AM_WARNING(
-                            MSGID_ACTIVITY_REPLACED,
-                            4,
-                            PMLOGKFV("Activity", "%llu", act->getId()),
-                            PMLOGKFV("revision", "%llu", (unsigned long long)pt->getRev()),
-                            PMLOGKFV("old_Activity", "%llu", old->getId()),
-                            PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
-                            "");
+                        m_oldTokens.push_back(oldPt);
+                        ActivityManager::getInstance().unregisterActivityName(old);
+                        ActivityManager::getInstance().releaseActivity(old);
 
-                    m_oldTokens.push_back(oldPt);
-                    ActivityManager::getInstance().unregisterActivityName(old);
-                    ActivityManager::getInstance().releaseActivity(old);
+                        ActivityManager::getInstance().registerActivityId(act);
+                    } else {
+                        LOG_AM_WARNING(
+                                MSGID_ACTIVITY_NOT_REPLACED,
+                                4,
+                                PMLOGKFV("Activity", "%llu", act->getId()),
+                                PMLOGKFV("revision", "%llu", (unsigned long long)pt->getRev()),
+                                PMLOGKFV("old_Activity", "%llu", old->getId()),
+                                PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
+                                "");
 
-                    ActivityManager::getInstance().registerActivityId(act);
-                } else {
-                    LOG_AM_WARNING(
-                            MSGID_ACTIVITY_NOT_REPLACED,
-                            4,
-                            PMLOGKFV("Activity", "%llu", act->getId()),
-                            PMLOGKFV("revision", "%llu", (unsigned long long)pt->getRev()),
-                            PMLOGKFV("old_Activity", "%llu", old->getId()),
-                            PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
-                            "");
-
-                    m_oldTokens.push_back(pt);
-                    ActivityManager::getInstance().releaseActivity(act);
-                    continue;
+                        m_oldTokens.push_back(pt);
+                        ActivityManager::getInstance().releaseActivity(act);
+                        continue;
+                    }
                 }
             }
 
@@ -244,35 +245,36 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
 
                 std::shared_ptr<PersistTokenDB> oldPt =
                         std::dynamic_pointer_cast<PersistTokenDB, PersistToken>(old->getPersistToken());
+                if (oldPt && pt && act) {
+                    if (pt->getRev() > oldPt->getRev()) {
+                        LOG_AM_WARNING(
+                                MSGID_ACTIVITY_REPLACED,
+                                4,
+                                PMLOGKFV("Activity","%llu",act->getId()),
+                                PMLOGKFV("revision","%llu", (unsigned long long)pt->getRev()),
+                                PMLOGKFV("old_Activity","%llu", old->getId()),
+                                PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
+                                "");
 
-                if (pt->getRev() > oldPt->getRev()) {
-                    LOG_AM_WARNING(
-                            MSGID_ACTIVITY_REPLACED,
-                            4,
-                            PMLOGKFV("Activity","%llu",act->getId()),
-                            PMLOGKFV("revision","%llu", (unsigned long long)pt->getRev()),
-                            PMLOGKFV("old_Activity","%llu", old->getId()),
-                            PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
-                            "");
+                        m_oldTokens.push_back(oldPt);
+                        ActivityManager::getInstance().unregisterActivityName(old);
+                        ActivityManager::getInstance().releaseActivity(old);
 
-                    m_oldTokens.push_back(oldPt);
-                    ActivityManager::getInstance().unregisterActivityName(old);
-                    ActivityManager::getInstance().releaseActivity(old);
+                        ActivityManager::getInstance().registerActivityName(act);
+                    } else {
+                        LOG_AM_WARNING(
+                                MSGID_ACTIVITY_NOT_REPLACED,
+                                4,
+                                PMLOGKFV("Activity","%llu", act->getId()),
+                                PMLOGKFV("revision","%llu", (unsigned long long)pt->getRev()),
+                                PMLOGKFV("old_Activity","%llu", old->getId()),
+                                PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
+                                "");
 
-                    ActivityManager::getInstance().registerActivityName(act);
-                } else {
-                    LOG_AM_WARNING(
-                            MSGID_ACTIVITY_NOT_REPLACED,
-                            4,
-                            PMLOGKFV("Activity","%llu", act->getId()),
-                            PMLOGKFV("revision","%llu", (unsigned long long)pt->getRev()),
-                            PMLOGKFV("old_Activity","%llu", old->getId()),
-                            PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
-                            "");
-
-                    m_oldTokens.push_back(pt);
-                    ActivityManager::getInstance().releaseActivity(act);
-                    continue;
+                        m_oldTokens.push_back(pt);
+                        ActivityManager::getInstance().releaseActivity(act);
+                        continue;
+                    }
                 }
             }
 

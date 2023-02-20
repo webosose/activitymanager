@@ -64,7 +64,7 @@ std::string BusId::getString(const std::string& id, BusIdType type)
 
 std::string BusId::getString(const char *id, BusIdType type)
 {
-    if (type == BusNull)
+    if (id == nullptr || type == BusNull)
         return std::string("invalid");
     else if (type == BusApp)
         return std::string("appId:") + id;

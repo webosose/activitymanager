@@ -150,28 +150,32 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
      * Service.  Transient bus errors are handled automatically.
      *
      * XXX have an option to disable auto-resubscribe */
+    auto activity_ptr = m_activity.lock();
+    if (!activity_ptr) {
+        return;
+    }
     if (err) {
         if (response.get(_T("subscribed"), subscribed) &&
             subscribed.type() == MojObject::TypeBool && subscribed.boolValue()) {
             LOG_AM_DEBUG("[Activity %llu] Trigger call \"%s\" failed, but subscription is still available.",
-                         m_activity.lock()->getId(),
+                         activity_ptr->getId(),
                          m_subscription->getURL().getString().c_str());
             // This case may be considered a trigger failure,
             // but activitymanager has not considered this as a failure. So keep this policy.
         } else {
             LOG_AM_WARNING("TRIGGER_FAIL", 4,
-                           PMLOGKFV("Activity", "%llu", m_activity.lock()->getId()),
+                           PMLOGKFV("Activity", "%llu", activity_ptr->getId()),
                            PMLOGKS("trigger", m_name.c_str()),
                            PMLOGKS("url", m_subscription->getURL().getString().c_str()),
                            PMLOGJSON("Response", MojoObjectJson(response).c_str()), "");
-            m_activity.lock()->onFailTrigger(shared_from_this());
+            activity_ptr->onFailTrigger(shared_from_this());
             return;
         }
     }
 
     if (m_matcher->match(response)) {
         LOG_AM_DEBUG("[Activity %llu] Trigger call \"%s\" fired!",
-                     m_activity.lock()->getId(),
+                     activity_ptr->getId(),
                      m_subscription->getURL().getString().c_str());
         if (!m_isSatisfied) {
             m_isSatisfied = true;
@@ -179,7 +183,7 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
         }
     } else {
         LOG_AM_DEBUG("[Activity %llu] Trigger call \"%s\" is not triggered",
-                     m_activity.lock()->getId(),
+                     activity_ptr->getId(),
                      m_subscription->getURL().getString().c_str());
         if (m_isSatisfied) {
             m_isSatisfied = false;
@@ -187,7 +191,7 @@ void ConcreteTrigger::processResponse(const MojObject& response, MojErr err)
         }
     }
 
-    m_activity.lock()->onSuccessTrigger(shared_from_this(), statusChanged, valueChanged);
+   activity_ptr->onSuccessTrigger(shared_from_this(), statusChanged, valueChanged);
 }
 
 MojErr ConcreteTrigger::toJson(MojObject& rep, unsigned flags) const

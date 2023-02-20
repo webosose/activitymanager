@@ -42,7 +42,7 @@ void TimeoutBase::arm()
     GSource *timeout = g_timeout_source_new_seconds((guint)m_seconds);
     g_source_set_callback(timeout, TimeoutBase::staticWakeupTimeout, this, NULL);
     g_source_attach(timeout, g_main_context_default());
-    g_source_unref(timeout);
+
 
     m_timeout = timeout;
 }
@@ -70,7 +70,7 @@ gboolean TimeoutBase::staticWakeupTimeout(gpointer data)
     TimeoutBase *base = static_cast<TimeoutBase *>(data);
 
     /* Reset NOW, because the timeout call could delete this object. */
-    base->m_timeout = NULL;
+    base->cancel();
 
     try {
         base->wakeupTimeout();
