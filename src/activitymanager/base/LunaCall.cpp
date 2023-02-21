@@ -218,7 +218,7 @@ void LunaCall::handleResponseWrapper(MojServiceMessage *msg, MojObject& response
         std::string error;
         if (isBusError(msg, response, error)) {
             MojErr err2 = MojErrLuna;
-            if (error == kBusErrorServiceBusy) {
+            if (kBusErrorServiceBusy != nullptr && error == kBusErrorServiceBusy) {
                 if ((err2 = callStatus()) != MojErrNone) {
                     LOG_AM_WARNING(MSGID_SERVICE_BUSY, 3,
                                    PMLOGKFV("serial", "%u", m_serial),

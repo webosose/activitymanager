@@ -178,7 +178,9 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                 m_oldTokens.push_back(pt);
                 continue;
             }
-
+            if (!act) {
+                return;
+            }
             act->setPersistToken(pt);
 
             /* Attempt to register this Activity's Id and Name, in order. */
