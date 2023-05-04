@@ -25,6 +25,8 @@ Before=configurator-activity.service
 
 [Service]
 Type=notify
+User=system
+Group=system
 OOMScoreAdjust=-500
 EnvironmentFile=-/var/systemd/system/env/activitymanager.env
 ExecStart=/usr/sbin/activitymanager -c {\"log\":{\"appender\":{\"type\":\"syslog\"},\"levels\":{\"default\":\"notice\"}}}
