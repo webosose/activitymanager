@@ -84,22 +84,22 @@ static GOptionEntry OPTION_ENTRIES[] = {
 int getUidofActivityManager()
 {
     const int max_buffer = 20;
-    int uid = -1;
+    int uid = 1016;
     char uidline[max_buffer];
     FILE *fp = popen("ps -C activitymanager -o uid= --no-headers","r");
     if (fp == NULL) {
-        return -1;
+        return uid;
     }
 
     if(fgets(uidline, max_buffer, fp) == NULL) {
         pclose(fp);
-        return -1;
+        return uid;
     }
 
     uid = std::stoi(uidline);
     if (uid < 0) {
         pclose(fp);
-        return -1;
+        return 1016;
     }
 
     pclose(fp);
