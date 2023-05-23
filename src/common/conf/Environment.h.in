@@ -23,7 +23,7 @@
 
 // am-monitor
 #define AM_IPC_DEFAULT_DIR              "/tmp/activitymanager/"
-#define AM_IPC_USER_DIR                 "/run/user/"
+#define AM_IPC_USER_DIR                 "/run/user/1016"
 #define AM_MONITOR_REQ_PIPE_FILE        "am-monitor.req"
 #define AM_MONITOR_RESP_PIPE_FILE       "am-monitor.resp"
 #define AM_MONITOR_LOCK_FILE            "am-monitor.lock"

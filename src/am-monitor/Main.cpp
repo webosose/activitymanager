@@ -81,31 +81,6 @@ static GOptionEntry OPTION_ENTRIES[] = {
     }
 };
 
-int getUidofActivityManager()
-{
-    const int max_buffer = 20;
-    int uid = 1016;
-    char uidline[max_buffer];
-    FILE *fp = popen("ps -C activitymanager -o uid= --no-headers","r");
-    if (fp == NULL) {
-        return uid;
-    }
-
-    if(fgets(uidline, max_buffer, fp) == NULL) {
-        pclose(fp);
-        return uid;
-    }
-
-    uid = std::stoi(uidline);
-    if (uid < 0) {
-        pclose(fp);
-        return 1016;
-    }
-
-    pclose(fp);
-    return uid;
-}
-
 int main(int argc, char *argv[])
 {
     int exitcode = 0;
@@ -118,7 +93,6 @@ int main(int argc, char *argv[])
     std::string line;
     struct timespec now;
     std::string ipcDir;
-    int am_uid = getUidofActivityManager();
 
     g_option_context_add_main_entries (context, OPTION_ENTRIES, NULL);
     g_option_context_set_description(context, OPTION_DESCRIPTION);
@@ -128,16 +102,10 @@ int main(int argc, char *argv[])
         goto Exit;
     }
 
-    if (am_uid == -1) {
-        std::cerr << "Unable to get UID of activitymanager: " << strerror(errno) << std::endl;
-        exitcode = errno;
-        goto Exit;
-    }
-  
-    if (am_uid == 0) {
+    if (getuid() == 0) {
         ipcDir = AM_IPC_DEFAULT_DIR;
     } else {
-        ipcDir = AM_IPC_USER_DIR + to_string(am_uid) + "/activitymanager/";
+        ipcDir = AM_IPC_USER_DIR + string("/activitymanager/");
     }
 
     if (g_mkdir_with_parents(ipcDir.c_str(), 0755) == -1) {
