@@ -39,7 +39,7 @@ ActivitySendHandler::ActivitySendHandler()
     if (getuid() == 0) {
         m_ipcDir = AM_IPC_DEFAULT_DIR;
     } else {
-        m_ipcDir = AM_IPC_USER_DIR + to_string(getuid()) + "/activitymanager/";
+        m_ipcDir = AM_IPC_USER_DIR + string("/activitymanager/");
     }
     m_reqPipePath = m_ipcDir + AM_SEND_REQ_PIPE_FILE;
     m_respPipePath = m_ipcDir + AM_SEND_RESP_PIPE_FILE;

@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     if (getuid() == 0) {
         ipcDir = AM_IPC_DEFAULT_DIR;
     } else {
-        ipcDir = AM_IPC_USER_DIR + to_string(getuid()) + "/activitymanager/";
+        ipcDir = AM_IPC_USER_DIR + string("/activitymanager/");
     }
 
     if (g_mkdir_with_parents(ipcDir.c_str(), 0755) == -1) {
