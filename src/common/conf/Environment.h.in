@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 LG Electronics, Inc.
+// Copyright (c) 2017-2024 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@
 #define AM_SEND_RESP_PIPE_FILE          "am-send.resp"
 
 // H/W and O/S info
-#define TARGET_DISTRO                   "@WEBOS_TARGET_DISTRO@"
-#define TARGET_DISTRO_VARIANT           "@WEBOS_TARGET_DISTRO_VARIANT@"
 #define TARGET_MACHINE                  "@WEBOS_TARGET_MACHINE@"
 #define TARGET_MACHINE_IMPL             "@WEBOS_TARGET_MACHINE_IMPL@"
 
