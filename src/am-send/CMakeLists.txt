@@ -25,7 +25,6 @@ include_directories(${PBNJSON_CPP_INCLUDE_DIRS})
 webos_add_compiler_flags(ALL ${PBNJSON_CPP_CFLAGS_OTHER})
 
 # Basic
-webos_machine_dep()
 set(BIN_NAME am-send)
 
 # Compiling

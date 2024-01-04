@@ -32,8 +32,4 @@
 #define AM_SEND_REQ_PIPE_FILE           "am-send.req"
 #define AM_SEND_RESP_PIPE_FILE          "am-send.resp"
 
-// H/W and O/S info
-#define TARGET_MACHINE                  "@WEBOS_TARGET_MACHINE@"
-#define TARGET_MACHINE_IMPL             "@WEBOS_TARGET_MACHINE_IMPL@"
-
 #endif /* __CONFIGURATION_H__ */
