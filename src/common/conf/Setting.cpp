@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 LG Electronics, Inc.
+// Copyright (c) 2017-2024 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "Setting.h"
+#include "BuildInfo.hpp"
 
 Setting::Setting()
 {
-    string machine = TARGET_MACHINE;
+    BuildInfo buildInfo;
+    string machine = buildInfo.get("MACHINE");
 
     if (machine == "qemux86")
         m_isSimulator = true;

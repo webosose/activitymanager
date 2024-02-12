@@ -1,4 +1,4 @@
-# Copyright (c) 2009-2018 LG Electronics, Inc.
+# Copyright (c) 2009-2024 LG Electronics, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ project(activitymanager CXX)
 include(webOS/webOS)
 webos_modules_init(1 0 0 QUALIFIER RC2)
 webos_component(3 0 0)
-
-webos_machine_impl_dep()
 
 webos_build_system_bus_files()
 webos_build_db8_files()
