@@ -356,7 +356,7 @@ MojErr ActivityCategoryHandler::createActivity(MojServiceMessage *msg, MojObject
     payload.get(_T("start"), start);
 
     if (!subscribed && !(start && act->hasCallback())) {
-        ActivityManager::getInstance().releaseActivity(act);
+        ActivityManager::getInstance().releaseActivity(std::move(act));
 
         err = msg->replyError(MojErrInvalidArg,
                 "Created Activity must specify \"start\" and a Callback if not subscribed");

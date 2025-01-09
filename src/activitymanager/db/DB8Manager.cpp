@@ -169,13 +169,13 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                 LOG_AM_WARNING(MSGID_CREATE_ACTIVITY_EXCEPTION, 1,
                                PMLOGKS("Exception",except.what()), "Activity: %s",
                                MojoObjectJson(rep).c_str());
-                m_oldTokens.push_back(pt);
+                m_oldTokens.push_back(std::move(pt));
                 continue;
             } catch (...) {
                 LOG_AM_WARNING(MSGID_UNKNOWN_EXCEPTION, 0,
                                "Activity : %s. Unknown exception decoding encoded",
                                MojoObjectJson(rep).c_str());
-                m_oldTokens.push_back(pt);
+                m_oldTokens.push_back(std::move(pt));
                 continue;
             }
             if (!act) {
@@ -208,7 +208,7 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                                 PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
                                 "");
 
-                        m_oldTokens.push_back(oldPt);
+                        m_oldTokens.push_back(std::move(oldPt));
                         ActivityManager::getInstance().unregisterActivityName(old);
                         ActivityManager::getInstance().releaseActivity(old);
 
@@ -223,7 +223,7 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                                 PMLOGKFV("old_revision", "%llu", (unsigned long long)oldPt->getRev()),
                                 "");
 
-                        m_oldTokens.push_back(pt);
+                        m_oldTokens.push_back(std::move(pt));
                         ActivityManager::getInstance().releaseActivity(act);
                         continue;
                     }
@@ -258,7 +258,7 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                                 PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
                                 "");
 
-                        m_oldTokens.push_back(oldPt);
+                        m_oldTokens.push_back(std::move(oldPt));
                         ActivityManager::getInstance().unregisterActivityName(old);
                         ActivityManager::getInstance().releaseActivity(old);
 
@@ -273,7 +273,7 @@ void DB8Manager::activityLoadResults(MojServiceMessage *msg, const MojObject& re
                                 PMLOGKFV("old_revision","%llu", (unsigned long long)oldPt->getRev()),
                                 "");
 
-                        m_oldTokens.push_back(pt);
+                        m_oldTokens.push_back(std::move(pt));
                         ActivityManager::getInstance().releaseActivity(act);
                         continue;
                     }

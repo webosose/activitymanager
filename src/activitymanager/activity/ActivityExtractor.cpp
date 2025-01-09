@@ -80,7 +80,7 @@ std::shared_ptr<Activity> ActivityExtractor::createActivity(const MojObject& spe
                          PMLOGKFV("activity", "%llu", id),
                          PMLOGKS("creator_id", MojoObjectJson(creator).c_str()),
                          "Unable to decode creator id while reloading");
-            ActivityManager::getInstance().releaseActivity(act);
+            ActivityManager::getInstance().releaseActivity(std::move(act));
             throw;
         }
     } else {
@@ -156,14 +156,14 @@ std::shared_ptr<Activity> ActivityExtractor::createActivity(const MojObject& spe
                      PMLOGKS("Exception", except.what()),
                      "Unexpected exception reloading Activity from: '%s'",
                      MojoObjectJson(spec).c_str());
-        ActivityManager::getInstance().releaseActivity(act);
+        ActivityManager::getInstance().releaseActivity(std::move(act));
         throw;
     } catch (...) {
         LOG_AM_ERROR(MSGID_RELOAD_ACTVTY_UNKNWN_EXCPTN, 1,
                      PMLOGKFV("activity","%llu",act->getId()),
                      "Unknown exception reloading Activity from: %s",
                      MojoObjectJson(spec).c_str());
-        ActivityManager::getInstance().releaseActivity(act);
+        ActivityManager::getInstance().releaseActivity(std::move(act));
         throw;
     }
 
@@ -351,8 +351,8 @@ std::vector<std::shared_ptr<ITrigger>> ActivityExtractor::createTriggers(
     }
 
     if (act->getTriggerMode() == TriggerConditionType::kMultiTriggerNone) {
-        std::shared_ptr<ITrigger> trigger = createTrigger(act, spec);
-        vec.push_back(trigger);
+        std::shared_ptr<ITrigger> trigger = createTrigger(std::move(act), spec);
+        vec.push_back(std::move(trigger));
         return vec;
     }
 
@@ -366,7 +366,7 @@ std::vector<std::shared_ptr<ITrigger>> ActivityExtractor::createTriggers(
     for (MojObject::ConstArrayIterator iter = multiTriggerSpec.arrayBegin() ;
             iter != multiTriggerSpec.arrayEnd() ; ++iter) {
         std::shared_ptr<ITrigger> trigger = createTrigger(act, *iter);
-        vec.push_back(trigger);
+        vec.push_back(std::move(trigger));
     }
 
     return vec;
@@ -757,7 +757,7 @@ void ActivityExtractor::processRequirements(std::shared_ptr<Activity> activity,
             try {
                 std::shared_ptr<IRequirement> req =
                         RequirementManager::getInstance().getRequirement(iter.key().data(), *iter);
-                addedRequirements.push_back(req);
+                addedRequirements.push_back(std::move(req));
             } catch (...) {
                 /* Really should pre-check the requirements to make sure
                  * the names are all valid, so we don't have to throw here. */
